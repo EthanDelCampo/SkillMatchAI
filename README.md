@@ -16,13 +16,15 @@ https://www.geeksforgeeks.org/how-to-build-a-basic-crud-app-with-node-js-and-rea
 
 ## Frontend Notes
 
-To start:
+To start, cd to ./frontend, then:
 
 ```npm start```
 
 then visit localhost:3000 in your favorite web browser
 
 ## Backend Notes
+
+To start cd to ./backend, then:
 
 ```npm test```
 
