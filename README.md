@@ -20,7 +20,7 @@ To start, cd to ./frontend, then:
 
 ```npm start```
 
-then visit localhost:3000 in your favorite web browser
+then visit localhost:3000 in your favorite web browser (firefox)
 
 ## Backend Notes
 
