@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import SurveyQuestion from "./SurveyQuestion";
 import { submitSurvey } from "../api/surveyApi";
+import axios from "axios";
 
 const surveyQuestions = [
   { id: 1, question: "I can analyze complex problems and find effective solutions." },
@@ -44,8 +45,11 @@ const Survey = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await submitSurvey(responses);
-      setResult(res.data.recommendations);
+      console.log(responses);
+      axios
+		    .post("http://localhost:8080/api/survey", { responses })
+	    	.then(res => setResult(res.data.recommendations))
+        .catch(err => console.error(err));
     } catch (err) {
       console.error("Error submitting survey:", err);
     }
@@ -53,13 +57,16 @@ const Survey = () => {
 
   return (
     <div>
-      <h2>SkillMatch AI - Self-Assessment Survey</h2>
-      <form onSubmit={handleSubmit}>
+      {!result && (
+      <div>
+        <h2>SkillMatch AI - Self-Assessment Survey</h2>
+        <form onSubmit={handleSubmit}>
         {surveyQuestions.map((q) => (
           <SurveyQuestion key={q.id} question={q} response={responses} setResponse={setResponses} options={options} />
         ))}
         <button type="submit">Submit</button>
       </form>
+      </div>)}
 
       {result && (
         <div>
