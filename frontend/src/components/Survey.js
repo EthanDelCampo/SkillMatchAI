@@ -6,7 +6,7 @@ import axios from "axios";
 const surveyQuestions = [
   { id: 1, question: "I can analyze complex problems and find effective solutions." },
   { id: 2, question: "I manage my time efficiently and meet deadlines consistently." },
-  { id: 3, question: "I am comfortable using digital productivity tools." },
+  { id: 3, question:  "I can analyze complex problems and find effective solutions." },
   { id: 4, question: "I can effectively interpret and analyze data to make informed decisions." },
   { id: 5, question: "I quickly adapt to new software and technologies." },
   { id: 6, question: "I can work independently with minimal supervision." },

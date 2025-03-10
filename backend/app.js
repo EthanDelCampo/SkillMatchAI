@@ -3,12 +3,35 @@
 const express = require("express");
 const app = express();
 
+// import questions from survey
+const surveyQuestions = require("../surveyQuestions.json");
+
+app.use(express.json());
+
 // Handle POST request
 app.post('/api/survey', (req, res) => {
-   
-    // Process the data (e.g., save to database)
-    console.log('Received post request'); 
+
+    // process data
+    console.log('\nReceived post request'); 
+    //console.log(req.body);
+    //console.log(req.body.responses[2]);
     
+    for (let i = 1; i <= 30; i++) {
+      const element = req.body.responses[i];
+      if (element == null) {
+        console.log("Invalid number of responses, rejecting.");
+
+        res.status(400).json({
+          message: "Invalid number of responses",
+          recommendations: ["unemployed"],
+          success: false
+        });
+
+        return;
+      }
+
+      console.log(element);
+    }
 
     res.status(201).json({
         message: 'Data received successfully',
