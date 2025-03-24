@@ -44,16 +44,35 @@ const Survey = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    console.log("🚀 Form submitted with responses:", responses);
+  
+    // Condition 1: Only the first question is answered (for testing purposes)
+    const firstQuestionOnly = Object.keys(responses).length === 1 && responses[1];
+  
+    // Condition 2: All 30 questions are answered
+    const allAnswered = Object.keys(responses).length === 30;
+
+    console.log("🛠 Responses:", responses);
+    console.log("✅ First Question Only Condition:", firstQuestionOnly);
+    console.log("✅ All Questions Answered Condition:", allAnswered);
+  
+    if (!firstQuestionOnly && !allAnswered) {
+      alert("You must answer all 30 questions.");
+      return;
+    }
+  
     try {
-      console.log(responses);
-      axios
-		    .post("http://localhost:8080/api/survey", { responses })
-	    	.then(res => setResult(res.data.recommendations))
-        .catch(err => console.error(err));
+
+      console.log("📡 Sending data to backend:", JSON.stringify({ responses }, null, 2)); // Debug request payload
+      
+      const res = await axios.post("http://localhost:8080/api/survey", { responses });
+      setResult(res.data.recommendations);
     } catch (err) {
       console.error("Error submitting survey:", err);
     }
   };
+  
 
   return (
     <div>
@@ -64,7 +83,7 @@ const Survey = () => {
         {surveyQuestions.map((q) => (
           <SurveyQuestion key={q.id} question={q} response={responses} setResponse={setResponses} options={options} />
         ))}
-        <button type="submit">Submit</button>
+        <button type="button" onClick={handleSubmit}>Submit</button>
       </form>
       </div>)}
 

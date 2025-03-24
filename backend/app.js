@@ -1,7 +1,16 @@
 // Filename - demoapp/app.js
 
 const express = require("express");
+const cors = require("cors");
 const app = express();
+
+console.log("I'm here");
+
+// Enable CORS for all routes
+app.use(cors());
+
+// Middleware to parse JSON
+app.use(express.json());
 
 // Handle POST request
 app.post('/api/survey', (req, res) => {
