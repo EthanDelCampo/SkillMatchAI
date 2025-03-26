@@ -40,33 +40,78 @@ const options = ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly 
 const Survey = () => {
   const [responses, setResponses] = useState({});
   const [result, setResult] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);  // ✅ Add loading state
+  const [error, setError] = useState(null);       // ✅ Add error state
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (Object.keys(responses).length === 0) {
+      alert("Please answer at least one question before submitting!");
+      return;
+    }
+
+    setLoading(true);       // ✅ Start loading
+    setError(null);         // ✅ Clear previous errors
+
     try {
-      const res = await submitSurvey(responses);
-      setResult(res.data.recommendations);
+      const response = await fetch("http://localhost:5001/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(responses),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch recommendations.");
+      }
+
+      const data = await response.json();
+      setResult(data.recommendations);
+      setSubmitted(true);
     } catch (err) {
       console.error("Error submitting survey:", err);
+      setError("An error occurred while fetching recommendations. Please try again.");
+    } finally {
+      setLoading(false);    // Stop loading
     }
   };
 
   return (
-    <div>
-      <h2>SkillMatch AI - Self-Assessment Survey</h2>
-      <form onSubmit={handleSubmit}>
-        {surveyQuestions.map((q) => (
-          <SurveyQuestion key={q.id} question={q} response={responses} setResponse={setResponses} options={options} />
-        ))}
-        <button type="submit">Submit</button>
-      </form>
-
-      {result && (
+    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "20px" }}>
+      {!submitted ? (
         <div>
-          <h3>Career Recommendations:</h3>
-          <ul>
-            {result.map((career, index) => <li key={index}>{career}</li>)}
-          </ul>
+          <h2>SkillMatch AI - Self-Assessment Survey</h2>
+          <form onSubmit={handleSubmit}>
+            {surveyQuestions.map((q) => (
+              <SurveyQuestion
+                key={q.id}
+                question={q}
+                response={responses}
+                setResponse={setResponses}
+                options={options}
+              />
+            ))}
+            <button type="submit" disabled={loading} style={{ marginTop: "20px" }}>
+              {loading ? "Submitting..." : "Submit"}
+            </button>
+          </form>
+
+          {error && <p style={{ color: "red" }}>{error}</p>}
+        </div>
+      ) : (
+        <div>
+          <h3>Career Recommendations</h3>
+          {result && result.length > 0 ? (
+            <ul>
+              {result.map((career, index) => (
+                <li key={index}>{career}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No recommendations received.</p>
+          )}
+          <button onClick={() => window.location.reload()}>Take Survey Again</button>
         </div>
       )}
     </div>
