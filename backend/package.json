@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "start": "node app.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
@@ -12,14 +11,15 @@
   "type": "commonjs",
   "description": "",
   "dependencies": {
+    "@google-ai/generativelanguage": "^3.1.0",
+    "@google/generative-ai": "^0.24.0",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "google-auth-library": "^9.15.1",
     "mongoose": "^8.9.5",
-    "nodemon": "^3.1.9"
-  },
-  "devDependencies": {
-    "jest": "^29.7.0"
+    "nodemon": "^3.1.9",
+    "openai": "^4.87.3"
   }
 }

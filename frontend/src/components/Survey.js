@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import SurveyQuestion from "./SurveyQuestion";
 import { submitSurvey } from "../api/surveyApi";
-import axios from "axios";
 
 const surveyQuestions = [
   { id: 1, question: "I can analyze complex problems and find effective solutions." },
@@ -41,58 +40,78 @@ const options = ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly 
 const Survey = () => {
   const [responses, setResponses] = useState({});
   const [result, setResult] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);  // ✅ Add loading state
+  const [error, setError] = useState(null);       // ✅ Add error state
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("🚀 Form submitted with responses:", responses);
-  
-    // Condition 1: Only the first question is answered (for testing purposes)
-    const firstQuestionOnly = Object.keys(responses).length === 1 && responses[1];
-  
-    // Condition 2: All 30 questions are answered
-    const allAnswered = Object.keys(responses).length === 30;
-
-    console.log("🛠 Responses:", responses);
-    console.log("✅ First Question Only Condition:", firstQuestionOnly);
-    console.log("✅ All Questions Answered Condition:", allAnswered);
-  
-    if (!firstQuestionOnly && !allAnswered) {
-      alert("You must answer all 30 questions.");
+    if (Object.keys(responses).length === 0) {
+      alert("Please answer at least one question before submitting!");
       return;
     }
-  
-    try {
 
-      console.log("📡 Sending data to backend:", JSON.stringify({ responses }, null, 2)); // Debug request payload
-      
-      const res = await axios.post("http://localhost:8080/api/survey", { responses });
-      setResult(res.data.recommendations);
+    setLoading(true);       // ✅ Start loading
+    setError(null);         // ✅ Clear previous errors
+
+    try {
+      const response = await fetch("http://localhost:5001/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(responses),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch recommendations.");
+      }
+
+      const data = await response.json();
+      setResult(data.recommendations);
+      setSubmitted(true);
     } catch (err) {
       console.error("Error submitting survey:", err);
+      setError("An error occurred while fetching recommendations. Please try again.");
+    } finally {
+      setLoading(false);    // Stop loading
     }
   };
-  
 
   return (
-    <div>
-      {!result && (
-      <div>
-        <h2>SkillMatch AI - Self-Assessment Survey</h2>
-        <form onSubmit={handleSubmit}>
-        {surveyQuestions.map((q) => (
-          <SurveyQuestion key={q.id} question={q} response={responses} setResponse={setResponses} options={options} />
-        ))}
-        <button type="button" onClick={handleSubmit}>Submit</button>
-      </form>
-      </div>)}
-
-      {result && (
+    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "20px" }}>
+      {!submitted ? (
         <div>
-          <h3>Career Recommendations:</h3>
-          <ul>
-            {result.map((career, index) => <li key={index}>{career}</li>)}
-          </ul>
+          <h2>SkillMatch AI - Self-Assessment Survey</h2>
+          <form onSubmit={handleSubmit}>
+            {surveyQuestions.map((q) => (
+              <SurveyQuestion
+                key={q.id}
+                question={q}
+                response={responses}
+                setResponse={setResponses}
+                options={options}
+              />
+            ))}
+            <button type="submit" disabled={loading} style={{ marginTop: "20px" }}>
+              {loading ? "Submitting..." : "Submit"}
+            </button>
+          </form>
+
+          {error && <p style={{ color: "red" }}>{error}</p>}
+        </div>
+      ) : (
+        <div>
+          <h3>Career Recommendations</h3>
+          {result && result.length > 0 ? (
+            <ul>
+              {result.map((career, index) => (
+                <li key={index}>{career}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No recommendations received.</p>
+          )}
+          <button onClick={() => window.location.reload()}>Take Survey Again</button>
         </div>
       )}
     </div>
