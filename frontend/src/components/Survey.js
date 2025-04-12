@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import SurveyQuestion from "./SurveyQuestion";
-import { submitSurvey } from "../api/surveyApi";
 
 const surveyQuestions = [
   { id: 1, question: "I can analyze complex problems and find effective solutions." },
@@ -41,8 +40,8 @@ const Survey = () => {
   const [responses, setResponses] = useState({});
   const [result, setResult] = useState(null);
   const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);  // ✅ Add loading state
-  const [error, setError] = useState(null);       // ✅ Add error state
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,8 +51,8 @@ const Survey = () => {
       return;
     }
 
-    setLoading(true);       // ✅ Start loading
-    setError(null);         // ✅ Clear previous errors
+    setLoading(true);
+    setError(null);
 
     try {
       const response = await fetch("http://localhost:5001/submit", {
@@ -73,45 +72,58 @@ const Survey = () => {
       console.error("Error submitting survey:", err);
       setError("An error occurred while fetching recommendations. Please try again.");
     } finally {
-      setLoading(false);    // Stop loading
+      setLoading(false);
     }
   };
 
   return (
-    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "20px" }}>
+    <div className="min-h-screen flex flex-col justify-center items-center bg-blue-50 p-8">
       {!submitted ? (
         <div>
-          <h2>SkillMatch AI - Self-Assessment Survey</h2>
+          <h2 className="text-3xl font-bold text-blue-700 mb-6 text-center">
+            SkillMatch AI - Self-Assessment Survey
+          </h2>
           <form onSubmit={handleSubmit}>
-            {surveyQuestions.map((q) => (
-              <SurveyQuestion
-                key={q.id}
-                question={q}
-                response={responses}
-                setResponse={setResponses}
-                options={options}
-              />
-            ))}
-            <button type="submit" disabled={loading} style={{ marginTop: "20px" }}>
+            <div className="space-y-6">
+              {surveyQuestions.map((q) => (
+                <SurveyQuestion
+                  key={q.id}
+                  question={q}
+                  response={responses}
+                  setResponse={setResponses}
+                  options={options}
+                />
+              ))}
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="mt-8 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors"
+            >
               {loading ? "Submitting..." : "Submit"}
             </button>
           </form>
 
-          {error && <p style={{ color: "red" }}>{error}</p>}
+          {error && <p className="text-red-500 mt-4">{error}</p>}
         </div>
       ) : (
-        <div>
-          <h3>Career Recommendations</h3>
+        <div className="text-center">
+          <h3 className="text-2xl font-semibold text-blue-700 mb-4">Career Recommendations</h3>
           {result && result.length > 0 ? (
-            <ul>
+            <ul className="list-disc list-inside text-left text-blue-800 space-y-2">
               {result.map((career, index) => (
                 <li key={index}>{career}</li>
               ))}
             </ul>
           ) : (
-            <p>No recommendations received.</p>
+            <p className="text-gray-600">No recommendations received.</p>
           )}
-          <button onClick={() => window.location.reload()}>Take Survey Again</button>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-6 bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-lg transition-colors"
+          >
+            Take Survey Again
+          </button>
         </div>
       )}
     </div>

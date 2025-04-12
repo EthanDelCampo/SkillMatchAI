@@ -78,11 +78,15 @@ Survey Responses:
 ${combinedResponses}
 
 TASKS:
-1. Analyze these responses and suggest 3 specific personalized career paths for the user.
-2. For each recommendation, explain briefly why it matches their responses.
-3. Provide 2 concrete next steps for the user to take towards each recommended career.
+1. Analyze these responses and suggest 3 specific personalized career paths for the user in list format (1 career path for each list entry).
+2. Next to each each recommendation, explain briefly why it matches their responses in 1-2 sentences.
+
+Be sure to NOT include any unnecessary text besides each bullet point. Do not bold, italicize, or otherwise format any text. Just output each paragraph on its
+own.
 
 Be concise but thorough.
+
+Also do not include any * in your response.
 `;
 
 
