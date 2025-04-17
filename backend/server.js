@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const surveyQuestions = require("../surveyQuestions.json");
 
 const app = express();
 const PORT = 5001;
@@ -13,7 +14,7 @@ const API_KEY = process.env.GEMINI_API_KEY;
 const MODEL_NAME = "gemini-2.0-flash"; // ✅ model you have access to on v1beta
 
 // ✅ Step 1: Add survey questions mapping here
-const surveyQuestions = {
+/*const surveyQuestions = {
   1: "I can analyze complex problems and find effective solutions.",
   2: "I manage my time efficiently and meet deadlines consistently." ,
   3: "I am comfortable using digital productivity tools." ,
@@ -44,7 +45,8 @@ const surveyQuestions = {
   28: "I prefer career growth through structured promotions rather than skill-based growth (e.g., freelance work, entrepreneurship)." ,
   29: "I believe networking is crucial for career advancement." ,
   30: "I would like AI-driven recommendations to improve my career development."
-};
+};*/
+
 
 // ✅ Route to verify server is running
 app.get("/", (req, res) => {
@@ -55,6 +57,35 @@ app.get("/", (req, res) => {
 app.post("/submit", async (req, res) => {
   const formData = req.body;
   console.log("Received survey responses:", formData);
+
+// check for validity
+    // js implementation of enum
+    const E_VALID = {
+        invalid: 0,
+        valid: 1,
+        dev_valid: 2
+    };
+    var is_valid = E_VALID.invalid;
+
+// if not dev, check for normal response
+    // break and send error if invalid
+    if (!is_valid) {
+        for (let i = 1; i <= 30; i++) {
+            const element = req.body.responses[i];
+
+            if (element == null) {
+                console.log(" Invalid number of responses, rejecting.");
+                res.status(418).json({
+                    message: "Invalid number of responses",
+                    recommendations: ["unemployed"],
+                    success: false
+                });
+                return;
+            }
+        }
+        is_valid = E_VALID.valid;
+    }
+
 
   try {
     // ✅ Step 2: Combine answers with their question text
