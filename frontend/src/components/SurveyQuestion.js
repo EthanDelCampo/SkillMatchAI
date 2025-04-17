@@ -1,12 +1,16 @@
 import React from "react";
 
-const SurveyQuestion = ({ question, response, setResponse, options }) => {
+const SurveyQuestion = ({ question, response, setResponse, options, isUnanswered }) => {
   const handleChange = (e) => {
     setResponse((prev) => ({ ...prev, [question.id]: e.target.value }));
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md border border-gray-200">
+    <div
+      className={`p-6 bg-white rounded-lg shadow-md border transition duration-300 ${
+        isUnanswered ? "border-red-500" : "border-gray-200"
+      }`}
+    >
       <p className="mb-4 font-medium text-gray-800">{question.question}</p>
       <div className="flex flex-wrap gap-4">
         {options.map((option, index) => (
@@ -26,6 +30,9 @@ const SurveyQuestion = ({ question, response, setResponse, options }) => {
           </label>
         ))}
       </div>
+      {isUnanswered && (
+        <p className="mt-2 text-sm text-red-500">Please answer this question.</p>
+      )}
     </div>
   );
 };

@@ -42,15 +42,22 @@ const Survey = () => {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [unanswered, setUnanswered] = useState([]); // Track unanswered questions
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (Object.keys(responses).length === 0) {
-      alert("Please answer at least one question before submitting!");
+    const unansweredQs = surveyQuestions
+      .filter((q) => !responses[q.id])
+      .map((q) => q.id);
+
+    if (unansweredQs.length > 0) {
+      setUnanswered(unansweredQs);
+      alert("Please answer all questions before submitting!");
       return;
     }
 
+    setUnanswered([]); // Clear when valid
     setLoading(true);
     setError(null);
 
@@ -96,6 +103,7 @@ const Survey = () => {
                   response={responses}
                   setResponse={setResponses}
                   options={options}
+                  isUnanswered={unanswered.includes(q.id)} // Pass down prop
                 />
               ))}
             </div>
