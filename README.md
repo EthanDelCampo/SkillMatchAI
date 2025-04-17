@@ -1,14 +1,6 @@
 # SkillMatchAI
 Team project for Knight Hacks Project Launch 2025
 
-Tools needed to run:
-- nodejs
-- npm
-- yarn (for tensor flow)
-- tensorflow.js
-- mongoose (for an easy database which works well with nodejs)
-probably others
-
 
 For the basics template of the project I am more or less following this tutorial:
 
@@ -26,6 +18,6 @@ then visit localhost:3000 in your favorite web browser (firefox)
 
 To start cd to ./backend, then:
 
-```npm test```
+```npm server.js```
 
 *subject to change however*
