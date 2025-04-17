@@ -77,16 +77,26 @@ Do not generalize or group categories unless explicitly stated in the questions.
 Survey Responses:
 ${combinedResponses}
 
-TASKS:
-1. Analyze these responses and suggest 3 specific personalized career paths for the user in list format (1 career path for each list entry).
-2. Next to each each recommendation, explain briefly why it matches their responses in 1-2 sentences.
+TASK:
+Carefully analyze the survey responses provided above. Then suggest exactly three personalized career paths for the user. Return each suggestion as a short paragraph.
 
-Be sure to NOT include any unnecessary text besides each bullet point. Do not bold, italicize, or otherwise format any text. Just output each paragraph on its
-own.
+Each paragraph should:
+- Start with the career name (e.g., "Business Analyst:").
+- Follow with a 1–2 sentence explanation of why the user is a strong match for this career.
+- Do not add any formatting symbols such as asterisks, dashes, or numbers.
+- Do not use bullet points or numbered lists.
+- Do not use markdown formatting of any kind.
+- Do not include introductions, summaries, or closing statements.
 
-Be concise but thorough.
+ONLY output the three paragraphs exactly like this example format:
 
-Also do not include any * in your response.
+Software Developer: Your high comfort with digital tools and coding experience makes you a great fit for a software development role.
+
+Project Manager: Your time management, leadership, and preference for structured processes align well with project management careers.
+
+Data Analyst: You showed strengths in data interpretation and decision-making, which are core to data analysis roles.
+
+Follow this exact structure.
 `;
 
 

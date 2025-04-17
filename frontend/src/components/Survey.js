@@ -77,12 +77,16 @@ const Survey = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-blue-50 p-8">
+    <div className="min-h-screen flex flex-col items-center bg-blue-50 px-4 py-10">
       {!submitted ? (
-        <div>
-          <h2 className="text-3xl font-bold text-blue-700 mb-6 text-center">
+        <div className="max-w-4xl w-full">
+          <h2 className="text-4xl font-bold text-blue-700 mb-2 text-center">
             SkillMatch AI - Self-Assessment Survey
           </h2>
+          <p className="text-lg text-gray-600 mb-8 text-center">
+            Answer the following questions honestly to receive personalized career recommendations based on your skills and preferences.
+          </p>
+
           <form onSubmit={handleSubmit}>
             <div className="space-y-6">
               {surveyQuestions.map((q) => (
@@ -98,16 +102,16 @@ const Survey = () => {
             <button
               type="submit"
               disabled={loading}
-              className="mt-8 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors"
+              className="mt-10 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl shadow-md transition duration-300"
             >
               {loading ? "Submitting..." : "Submit"}
             </button>
           </form>
 
-          {error && <p className="text-red-500 mt-4">{error}</p>}
+          {error && <p className="text-red-600 mt-4 text-center">{error}</p>}
         </div>
       ) : (
-        <div className="text-center">
+        <div className="text-center max-w-xl w-full">
           <h3 className="text-2xl font-semibold text-blue-700 mb-4">Career Recommendations</h3>
           {result && result.length > 0 ? (
             <ul className="list-disc list-inside text-left text-blue-800 space-y-2">
